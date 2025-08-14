@@ -1,2 +1,2 @@
-# Fincace-App
-Fincace App
+# Finace-App
+Finance App Project Documentation
