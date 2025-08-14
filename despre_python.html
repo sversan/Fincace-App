@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Despre Python{% endblock %}
+
+{% block content %}
+<h2>Despre creatorul limbajului Python 🐍</h2>
+<p><strong>Guido van Rossum</strong> este creatorul limbajului de programare Python.</p>
+<p>A început să lucreze la Python la sfârșitul anilor 1980, iar prima versiune publică a apărut în 1991.</p>
+<p>Scopul lui a fost să creeze un limbaj de programare ușor de învățat, dar puternic, care să poată fi folosit pentru proiecte mari și mici.</p>
+<p>Numele "Python" provine din trupa de comedie britanică "Monty Python", și nu de la șarpe.</p>
+
+<img src="{{ url_for('static', filename='images/guido.jpg') }}" alt="Guido van Rossum" style="max-width:300px; margin-top: 20px;">
+{% endblock %}

@@ -1,0 +1,102 @@
+
+{% extends "base.html" %} 
+{# Extends the base layout (header/footer from base.html) #}
+
+{% block content %} 
+{# Start of the "content" block that will be inserted into base.html #}
+<h1 style="background-color:DodgerBlue;">Finance App</h1>
+<style>
+p {
+  background-image: url('greece.png');
+}
+</style>
+<h3>Dashboard - {{ today }}</h3> 
+{# Show today's date from the 'today' variable passed by Flask #}
+
+<div class="action-buttons">
+    {# Action buttons for adding transactions, setting budget, viewing transactions, and income sources #}
+    <a href="{{ url_for('add_transaction') }}"><button>➕ Adaugă tranzacție</button></a>
+    <a href="{{ url_for('set_budget') }}"><button>💰 Setează buget</button></a>
+    <a href="{{ url_for('transactions') }}"><button>📜 Vezi tranzacții</button></a>
+    <a href="{{ url_for('sursa_venit') }}"><button>💵 Sursa venit</button></a>
+</div>
+
+{% if monthly_budget %}
+    {# If there is a monthly budget, show it #}
+    <div class="alert alert-info">
+        Buget lunar: {{ monthly_budget.amount }} lei
+    </div>
+
+    <!-- Income sources under budget -->
+    <div class="income-sources" style="margin-top: .5rem;">
+        {# Removed the invalid 'k %}' — nothing needed here #}
+
+        <h4 style="margin: 0;">Surse venit (luna curentă)</h4>
+        <ul style="list-style: none; padding-left: 0; margin: .25rem 0 0;">
+            {# Show each type of income, using .get() with default 0 if missing #}
+            <li>Salariu: {{ (incomes_summary.get('salariu', 0) or 0)|round(2) }} lei</li>
+            <li>Ore suplimentare: {{ (incomes_summary.get('ore suplimentare', 0) or 0)|round(2) }} lei</li>
+            <li>Voucher guvernamental: {{ (incomes_summary.get('voucher guvernamental', 0) or 0)|round(2) }} lei</li>
+            <li>Chirii: {{ (incomes_summary.get('chirii', 0) or 0)|round(2) }} lei</li>
+            <li>Investiții: {{ (incomes_summary.get('investiții', 0) or 0)|round(2) }} lei</li>
+        </ul>
+        <div style="margin-top:.25rem;">
+            <strong>Total venituri:</strong> {{ (total_income or 0)|round(2) }} lei
+        </div>
+    </div>
+{% endif %}
+
+{% if last_income %}
+    {# If there is a last income entry, show it as a success alert #}
+    <div class="alert alert-success">
+        Ultima sursă de venit: {{ last_income.note }} - {{ last_income.amount }} lei ({{ last_income.date }})
+    </div>
+{% endif %}
+
+<label>An:</label>
+<input type="number" id="yearInput" name="year" required>
+{# Auto-fill the year input with current year #}
+<script>
+    document.getElementById("yearInput").value = new Date().getFullYear();
+</script>
+
+<!-- Category chart -->
+<canvas id="catChart"></canvas>
+<script>
+    {# Pass labels and data from Flask variables into JavaScript #}
+    const labels = {{ chart_labels|tojson }};
+    const data = {{ chart_values|tojson }};
+    new Chart(document.getElementById('catChart'), {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{ data: data }]
+      }
+    });
+</script>
+
+<h3>Top alimente pe categorii:</h3>
+{% if products_by_category %}
+    {# Loop over each category and its products #}
+    {% for category, items in products_by_category.items() %}
+        <h4>{{ category }}</h4>
+        <ul>
+            {% for product, count in items %}
+                <li>{{ product }} - {{ count }} apariții</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <h4>Tranzacții</h4>
+    <ul>
+        {% for t in transactions %}
+            <li>{{ t.amount }} - {{ t.note }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {# If there are no frequent products, show a message #}
+    <p>Nu avem produse frecvente înregistrate.</p>
+{% endif %}
+
+{% endblock %}
+{# End of content block #}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}$
+{% block content %}$
+$
+<h3>Dashboard - {{ today }}</h3>$
+<div class="action-buttons">$
+    <a href="{{ url_for('add_transaction') }}"><button>➕ Adaugă tranzacție</button></a>$
+    <a href="{{ url_for('set_budget') }}"><button>💰 Setează buget</button></a>$
+    <a href="{{ url_for('transactions') }}"><button>📜 Vezi tranzacții</button></a>$
+    <a href="{{ url_for('sursa_venit') }}"><button>💵 Sursa venit</button></a>$
+</div>$
+$
+{% if monthly_budget %}$
+    <div class="alert alert-info">$
+        Buget lunar: {{ monthly_budget.amount }} lei$
+    </div>$
+$
+    <!-- Sursa venit sub buget -->$
+    <div class="income-sources" style="margin-top: .5rem;">$
+        <h4 style="margin: 0;">Surse venit (luna curentă)</h4>$
+        <ul style="list-style: none; padding-left: 0; margin: .25rem 0 0;">$
+            <li>Salariu: {{ (incomes_summary.get('salariu', 0) or 0)|round(2) }} lei</li>$
+            <li>Ore suplimentare: {{ (incomes_summary.get('ore suplimentare', 0) or 0)|round(2) }} lei</li>$
+            <li>Voucher guvernamental: {{ (incomes_summary.get('voucher guvernamental', 0) or 0)|round(2) }} lei</li>$
+            <li>Chirii: {{ (incomes_summary.get('chirii', 0) or 0)|round(2) }} lei</li>$
+            <li>Investiții: {{ (incomes_summary.get('investiții', 0) or 0)|round(2) }} lei</li>$
+        </ul>$
+        <div style="margin-top:.25rem;">$
+            <strong>Total venituri:</strong> {{ (total_income or 0)|round(2) }} lei$
+        </div>$
+    </div>$
+{% endif %}$
+$
+{% if last_income %}$
+    <div class="alert alert-success">$
+        Ultima sursă de venit: {{ last_income.note }} - {{ last_income.amount }} lei ({{ last_income.date }})$
+    </div>$
+{% endif %}$
+$
+<label>An:</label>$
+<input type="number" id="yearInput" name="year" required>$
+<script>$
+    document.getElementById("yearInput").value = new Date().getFullYear();$
+</script>$
+$
+<!-- Grafic categorii -->$
+<canvas id="catChart"></canvas>$
+<script>$
+    const labels = {{ chart_labels|tojson }};$
+    const data = {{ chart_values|tojson }};$
+    new Chart(document.getElementById('catChart'), {$
+      type: 'pie',$
+      data: {$
+        labels: labels,$
+        datasets: [{ data: data }]$
+      }$
+    });$
+</script>$
+$
+<h3>Top alimente pe categorii:</h3>$
+{% if products_by_category %}$
+    {% for category, items in products_by_category.items() %}$
+        <h4>{{ category }}</h4>$
+        <ul>$
+        {% for product, count in items %}$
+            <li>{{ product }} - {{ count }} apariții</li>$
+        {% endfor %}$
+        </ul>$
+    {% endfor %}$
+{% else %}$
+    <p>Nu avem produse frecvente înregistrate.</p>$
+{% endif %}$
+$
+{% endblock %}$

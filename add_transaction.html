@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Adaugă tranzacție</h3>
+<form method="post">
+  <div class="mb-2">
+    <label>Suma</label>
+    <input step="0.01" name="amount" class="form-control" required>
+  </div>
+  <div class="mb-2">
+    <label>Tip</label>
+    <select name="ttype" class="form-select">
+      <option value="income">Venit</option>
+      <option value="expense">Cheltuială</option>
+      <option value="saving">Economii</option>
+      <option value="chirii">Chirii</option>
+      <option value="voucher">Voucher</option>
+      <option value="tichet cadou">Tichet Cadou</option>
+      <option value="salariu">Salariu</option>
+    </select>
+  </div>
+  <div class="mb-2">
+    <label>Categorie</label>
+    <input name="category" class="form-control" placeholder="ex. Alimentatie">
+  </div>
+  <div class="mb-2">
+    <label>Data</label>
+    <input type="date" name="date" class="form-control">
+  </div>
+<div class="mb2">
+<label for="payment_method">Metoda plată:</label>
+  <select name="payment_method" id="payment_method">
+    <option value="cash">Cash</option>
+    <option value="card">Card</option>
+  </select>
+div class="mb2">
+<label>Data producerii:</label>
+<input type="date" name="production_date"><br>
+
+<label>Data expirării:</label>
+<input type="date" name="expiry_date"><br>
+</div>
+  <div class="mb-2">
+    <label>Notă</label>
+    <input name="note" class="form-control" placeholder="ex. Nume Produse">
+  </div>
+  <button class="btn btn-primary">Salvează</button>
+</form>
+{% endblock %}

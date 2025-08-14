@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/">My Finance App</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <h2>Lista tranzacțiilor</h2>
+
+    <!-- Afișare top alimente consumate -->
+    <div class="alert alert-info">
+        <strong>Top alimente consumate:</strong>
+        {% if top_alimente %}
+            <ul>
+                {% for aliment in top_alimente %}
+                    <li>{{ aliment|capitalize }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nu avem înregistrate încă creșteri la alimentele de bază în lista noastră.</p>
+        {% endif %}
+    </div>
+
+    <h2 class="mb-4">Transaction History</h2>
+
+    {% if transactions %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Suma</th>
+                    <th>Tip tranzacție</th>
+                    <th>Metodă plată</th>
+                    <th>Categorie</th>
+                    <th>Notă</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                    <tr>
+                        <td>{{ t.date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ t.amount }}</td>
+                        <td>{{ t.ttype }}</td>
+                        <td>{{ t.payment_method }}</td>
+                        <td>{{ t.category or '' }}</td>
+                        <td>{{ t.note or '' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">No transactions found.</div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
+{% endblock %}
